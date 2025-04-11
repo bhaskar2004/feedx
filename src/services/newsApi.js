@@ -28,6 +28,7 @@ export const getTopHeadlines = async (category = 'technology', country = 'us') =
   }
 };
 
+
 export const searchNews = async (query, page = 1) => {
   try {
     console.log('Searching news with query:', query);
