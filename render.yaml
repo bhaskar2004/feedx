@@ -2,9 +2,13 @@ services:
   - type: web
     name: technews-backend
     env: node
+    region: ohio
+    plan: free
     buildCommand: cd backend && npm install
     startCommand: cd backend && node server.js
     envVars:
+      - key: NODE_ENV
+        value: production
       - key: PORT
         value: 10000
       - key: EMAIL_USER
@@ -17,9 +21,13 @@ services:
   - type: web
     name: technews-frontend
     env: static
-    buildCommand: npm install && npm run build
+    region: ohio
+    plan: free
+    buildCommand: npm install && CI=false npm run build
     staticPublishPath: ./build
     envVars:
+      - key: NODE_ENV
+        value: production
       - key: REACT_APP_NEWS_API_KEY
         sync: false
       - key: REACT_APP_API_URL
