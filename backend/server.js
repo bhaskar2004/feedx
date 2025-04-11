@@ -3,6 +3,7 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 const path = require('path');
+const fetch = require('node-fetch');
 
 dotenv.config();
 
@@ -54,6 +55,53 @@ app.use(express.urlencoded({ extended: true }));
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Root route handler
+app.get('/', (req, res) => {
+  res.json({ message: 'Tech News API is running' });
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// News API endpoints
+app.get('/api/news', async (req, res) => {
+  try {
+    const { category = 'technology', country = 'us' } = req.query;
+    const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${process.env.NEWS_API_KEY}`);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    res.status(500).json({ error: 'Failed to fetch news' });
+  }
+});
+
+app.get('/api/everything', async (req, res) => {
+  try {
+    const { q, page = 1, pageSize = 20 } = req.query;
+    const response = await fetch(`https://newsapi.org/v2/everything?q=${q}&page=${page}&pageSize=${pageSize}&apiKey=${process.env.NEWS_API_KEY}`);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error searching news:', error);
+    res.status(500).json({ error: 'Failed to search news' });
+  }
+});
+
+app.get('/api/top-headlines', async (req, res) => {
+  try {
+    const { category, country = 'us', page = 1, pageSize = 10 } = req.query;
+    const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&page=${page}&pageSize=${pageSize}&apiKey=${process.env.NEWS_API_KEY}`);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching top headlines:', error);
+    res.status(500).json({ error: 'Failed to fetch top headlines' });
+  }
+});
 
 // Create transporter for sending emails
 const transporter = nodemailer.createTransport({
