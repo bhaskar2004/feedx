@@ -47,6 +47,10 @@ const mockAuthor = {
 
 const Author = () => {
   const { id } = useParams();
+  
+  // In a real app, you would fetch the author data using the id
+  // For now, we'll just use mock data
+  const author = mockAuthor; // In production: await fetchAuthor(id);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -56,15 +60,15 @@ const Author = () => {
             <CardContent>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
                 <Avatar
-                  src={mockAuthor.avatar}
-                  alt={mockAuthor.name}
+                  src={author.avatar}
+                  alt={author.name}
                   sx={{ width: 120, height: 120, mb: 2 }}
                 />
                 <Typography variant="h5" component="h1" gutterBottom>
-                  {mockAuthor.name}
+                  {author.name}
                 </Typography>
                 <Typography variant="body1" color="text.secondary" align="center">
-                  {mockAuthor.bio}
+                  {author.bio}
                 </Typography>
               </Box>
 
@@ -72,7 +76,7 @@ const Author = () => {
                 <Button
                   variant="outlined"
                   component="a"
-                  href={mockAuthor.social.twitter}
+                  href={author.social.twitter}
                   target="_blank"
                 >
                   Twitter
@@ -80,7 +84,7 @@ const Author = () => {
                 <Button
                   variant="outlined"
                   component="a"
-                  href={mockAuthor.social.linkedin}
+                  href={author.social.linkedin}
                   target="_blank"
                 >
                   LinkedIn
@@ -88,7 +92,7 @@ const Author = () => {
                 <Button
                   variant="outlined"
                   component="a"
-                  href={mockAuthor.social.website}
+                  href={author.social.website}
                   target="_blank"
                 >
                   Website
@@ -103,7 +107,7 @@ const Author = () => {
             Recent Articles
           </Typography>
           <Grid container spacing={3}>
-            {mockAuthor.articles.map((article) => (
+            {author.articles.map((article) => (
               <Grid item xs={12} key={article.id}>
                 <Card sx={{ display: 'flex' }}>
                   <CardMedia

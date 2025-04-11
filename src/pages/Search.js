@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Container,
   Grid,
@@ -20,43 +20,73 @@ import { searchNews } from '../services/newsApi';
 
 const Search = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
+  // Handle initial URL query
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const query = queryParams.get('q');
     if (query) {
       setSearchQuery(query);
-      handleSearch(query);
+      setDebouncedQuery(query);
     }
   }, [location]);
 
-  const handleSearch = async (query) => {
-    if (!query.trim()) return;
+  // Debounce the search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Handle the actual search
+  const handleSearch = useCallback(async (query) => {
+    if (!query.trim() || query.length < 3) {
+      setError('Please enter at least 3 characters to search');
+      setArticles([]);
+      return;
+    }
 
     try {
       setLoading(true);
       setError(null);
+      console.log(`Searching for: ${query}`);
       const data = await searchNews(query);
+      console.log(`Received ${data.length} search results for: ${query}`);
+      
       if (data.length === 0) {
-        setError('No articles found for your search. Try different keywords.');
+        setError(`No articles found for "${query}". Try different keywords or check your spelling.`);
+        setArticles([]);
       } else {
         setArticles(data);
+        navigate(`/search?q=${encodeURIComponent(query)}`, { replace: true });
       }
     } catch (err) {
-      setError(err.message || 'Failed to search articles. Please try again later.');
-      console.error('Search error:', err);
+      console.error(`Error searching for "${query}":`, err);
+      setError(err.message || 'Failed to search articles. Please check your internet connection and try again.');
+      setArticles([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  // Trigger search when debounced query changes
+  useEffect(() => {
+    if (debouncedQuery) {
+      handleSearch(debouncedQuery);
+    }
+  }, [debouncedQuery, handleSearch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleSearch(searchQuery);
+    setDebouncedQuery(searchQuery);
   };
 
   return (

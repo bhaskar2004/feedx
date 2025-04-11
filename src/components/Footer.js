@@ -21,19 +21,18 @@ const Footer = () => {
   const footerLinks = [
     { label: 'About Us', path: '/about' },
     { label: 'Contact', path: '/contact' },
-    { label: 'Privacy Policy', path: '/privacy' },
-    { label: 'Terms of Service', path: '/terms' },
-    { label: 'Advertise', path: '/advertise' },
-    { label: 'Careers', path: '/careers' },
+    { label: 'Privacy Policy', path: '/privacy-policy' },
+    { label: 'Terms of Service', path: '/terms-of-service' },
+    { label: 'Advertise', path: '/advertise' }
   ];
 
   const categories = [
-    { label: 'News', path: '/category/news' },
-    { label: 'Reviews', path: '/category/reviews' },
-    { label: 'Analysis', path: '/category/analysis' },
-    { label: 'Opinion', path: '/category/opinion' },
-    { label: 'Interviews', path: '/category/interviews' },
-    { label: 'Startups', path: '/category/startups' },
+    { label: 'Technology', path: '/category/technology' },
+    { label: 'Business', path: '/category/business' },
+    { label: 'Science', path: '/category/science' },
+    { label: 'Health', path: '/category/health' },
+    { label: 'Entertainment', path: '/category/entertainment' },
+    { label: 'Sports', path: '/category/sports' },
   ];
 
   return (
@@ -55,20 +54,6 @@ const Footer = () => {
             <Typography variant="body2" color="text.secondary">
               Your source for the latest in technology news, reviews, and analysis.
             </Typography>
-            <Box sx={{ mt: 2 }}>
-              <IconButton color="inherit" component="a" href="https://facebook.com">
-                <Facebook />
-              </IconButton>
-              <IconButton color="inherit" component="a" href="https://twitter.com">
-                <Twitter />
-              </IconButton>
-              <IconButton color="inherit" component="a" href="https://linkedin.com">
-                <LinkedIn />
-              </IconButton>
-              <IconButton color="inherit" component="a" href="https://instagram.com">
-                <Instagram />
-              </IconButton>
-            </Box>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -113,19 +98,22 @@ const Footer = () => {
 
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="h6" color="text.primary" gutterBottom>
-              Newsletter
+              Follow Us
             </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Subscribe to our newsletter for the latest tech news and updates.
-            </Typography>
-            <MuiLink
-              component={Link}
-              to="/newsletter"
-              color="primary"
-              variant="body2"
-            >
-              Subscribe Now
-            </MuiLink>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <IconButton color="inherit" component="a" href="https://facebook.com">
+                <Facebook />
+              </IconButton>
+              <IconButton color="inherit" component="a" href="https://twitter.com">
+                <Twitter />
+              </IconButton>
+              <IconButton color="inherit" component="a" href="https://linkedin.com">
+                <LinkedIn />
+              </IconButton>
+              <IconButton color="inherit" component="a" href="https://instagram.com">
+                <Instagram />
+              </IconButton>
+            </Box>
           </Grid>
         </Grid>
 

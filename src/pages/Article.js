@@ -17,6 +17,7 @@ import {
   Favorite as FavoriteIcon,
   Comment as CommentIcon,
 } from '@mui/icons-material';
+import { formatDate } from '../utils/dateUtils';
 
 // Mock data - In a real app, this would come from an API
 const mockArticle = {
@@ -47,33 +48,37 @@ const mockArticle = {
 
 const Article = () => {
   const { id } = useParams();
+  
+  // In a real app, you would fetch the article using the id
+  // For now, we'll just use mock data
+  const article = mockArticle; // In production: await fetchArticle(id);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
           <Typography variant="h3" component="h1" gutterBottom>
-            {mockArticle.title}
+            {article.title}
           </Typography>
           
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
             <Avatar
-              src={mockArticle.author.avatar}
-              alt={mockArticle.author.name}
+              src={article.author.avatar}
+              alt={article.author.name}
               sx={{ mr: 2 }}
             />
             <Box>
               <Typography variant="subtitle1">
-                {mockArticle.author.name}
+                {article.author.name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {new Date(mockArticle.date).toLocaleDateString()} • {mockArticle.category}
+                {formatDate(article.date)} • {article.category}
               </Typography>
             </Box>
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            {mockArticle.tags.map((tag) => (
+            {article.tags.map((tag) => (
               <Chip
                 key={tag}
                 label={tag}
@@ -88,7 +93,7 @@ const Article = () => {
               '& p': { mb: 2 },
               '& img': { maxWidth: '100%', height: 'auto', mb: 3 },
             }}
-            dangerouslySetInnerHTML={{ __html: mockArticle.content }}
+            dangerouslySetInnerHTML={{ __html: article.content }}
           />
 
           <Divider sx={{ my: 4 }} />
@@ -98,13 +103,13 @@ const Article = () => {
               variant="outlined"
               startIcon={<FavoriteIcon />}
             >
-              {mockArticle.likes} Likes
+              {article.likes} Likes
             </Button>
             <Button
               variant="outlined"
               startIcon={<CommentIcon />}
             >
-              {mockArticle.comments} Comments
+              {article.comments} Comments
             </Button>
             <Button
               variant="outlined"
@@ -123,16 +128,16 @@ const Article = () => {
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Avatar
-                  src={mockArticle.author.avatar}
-                  alt={mockArticle.author.name}
+                  src={article.author.avatar}
+                  alt={article.author.name}
                   sx={{ width: 56, height: 56, mr: 2 }}
                 />
                 <Box>
                   <Typography variant="subtitle1">
-                    {mockArticle.author.name}
+                    {article.author.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {mockArticle.author.bio}
+                    {article.author.bio}
                   </Typography>
                 </Box>
               </Box>
