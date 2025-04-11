@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_KEY = process.env.REACT_APP_NEWS_API_KEY;
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://tech-news-3jxo.onrender.com';
 
 if (!API_KEY) {
   console.error('NewsAPI key is not set! Please add REACT_APP_NEWS_API_KEY to your .env file');

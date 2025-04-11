@@ -12,7 +12,8 @@ const PORT = process.env.PORT || 5000;
 // CORS configuration
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://technews-frontend.onrender.com'
+  'https://tech-news-vszh.onrender.com',
+  'https://tech-news-3jxo.onrender.com'
 ];
 
 // Middleware
@@ -26,12 +27,33 @@ app.use(cors({
     }
     return callback(null, true);
   },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
 }));
+
+// Add headers for proper MIME types
+app.use((req, res, next) => {
+  if (req.path.endsWith('.css')) {
+    res.header('Content-Type', 'text/css');
+  } else if (req.path.endsWith('.js')) {
+    res.header('Content-Type', 'application/javascript');
+  } else if (req.path.endsWith('.json')) {
+    res.header('Content-Type', 'application/json');
+  } else if (req.path.endsWith('.html')) {
+    res.header('Content-Type', 'text/html');
+  } else if (req.path.match(/\.(jpg|jpeg|png|gif|ico)$/)) {
+    res.header('Content-Type', 'image/' + req.path.split('.').pop());
+  }
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Create transporter for sending emails
 const transporter = nodemailer.createTransport({
