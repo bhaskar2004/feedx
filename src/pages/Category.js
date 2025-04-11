@@ -25,21 +25,25 @@ const Category = () => {
       try {
         setLoading(true);
         setError(null);
+        console.log(`Fetching articles for category: ${category}`);
         const data = await getNewsByCategory(category);
+        console.log(`Received ${data.length} articles for category: ${category}`);
         if (data.length === 0) {
-          setError(`No articles found in the ${category} category.`);
+          setError(`No articles found in the ${category} category. Please try a different category.`);
         } else {
           setArticles(data);
         }
       } catch (err) {
-        setError(err.message || `Failed to fetch ${category} articles. Please try again later.`);
-        console.error('Category error:', err);
+        console.error(`Error fetching ${category} articles:`, err);
+        setError(err.message || `Failed to fetch ${category} articles. Please check your internet connection and try again.`);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchArticles();
+    if (category) {
+      fetchArticles();
+    }
   }, [category]);
 
   return (

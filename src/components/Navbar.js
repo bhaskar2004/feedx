@@ -11,6 +11,11 @@ import {
   MenuItem,
   useTheme,
   useMediaQuery,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -18,9 +23,16 @@ import {
   Twitter,
   Facebook,
   LinkedIn,
+  Home as HomeIcon,
+  Category as CategoryIcon,
+  Email as EmailIcon,
+  Info as InfoIcon,
+  AdsClick as AdsClickIcon,
+  Gavel as GavelIcon,
+  PrivacyTip as PrivacyTipIcon,
 } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -67,6 +79,8 @@ const Navbar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -83,17 +97,53 @@ const Navbar = () => {
     setMobileMenuAnchor(null);
   };
 
-  const navItems = [
-    { label: 'News', path: '/category/news' },
-    { label: 'Reviews', path: '/category/reviews' },
-    { label: 'Analysis', path: '/category/analysis' },
-    { label: 'Opinion', path: '/category/opinion' },
-    { label: 'Interviews', path: '/category/interviews' },
-    { label: 'Startups', path: '/category/startups' },
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const menuItems = [
+    { text: 'Home', icon: <HomeIcon />, path: '/' },
+    { text: 'Search', icon: <SearchIcon />, path: '/search' },
+    { text: 'Categories', icon: <CategoryIcon />, path: '/category/technology' },
+    { text: 'About', icon: <InfoIcon />, path: '/about' },
+    { text: 'Contact', icon: <EmailIcon />, path: '/contact' },
+    { text: 'Advertise', icon: <AdsClickIcon />, path: '/advertise' },
+    { text: 'Terms', icon: <GavelIcon />, path: '/terms-of-service' },
+    { text: 'Privacy', icon: <PrivacyTipIcon />, path: '/privacy-policy' },
   ];
 
+  const drawer = (
+    <List>
+      {menuItems.map((item) => (
+        <ListItem 
+          button 
+          key={item.text} 
+          component={Link} 
+          to={item.path}
+          selected={location.pathname === item.path}
+          onClick={handleDrawerToggle}
+        >
+          <ListItemIcon>{item.icon}</ListItemIcon>
+          <ListItemText primary={item.text} />
+        </ListItem>
+      ))}
+    </List>
+  );
+
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" elevation={0} sx={{ background: 'white', color: 'text.primary' }}>
+      {isMobile && (
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          sx={{ mr: 2 }}
+        >
+          <MenuIcon />
+        </IconButton>
+      )}
+      
       <Toolbar>
         <Typography
           variant="h6"
@@ -103,25 +153,33 @@ const Navbar = () => {
             flexGrow: 1,
             textDecoration: 'none',
             color: 'inherit',
-            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
           }}
         >
-          TechNews
+          <HomeIcon /> TechNews
         </Typography>
 
         {!isMobile && (
-          <>
-            {navItems.map((item) => (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {menuItems.map((item) => (
               <Button
-                key={item.label}
-                color="inherit"
+                key={item.text}
                 component={Link}
                 to={item.path}
+                startIcon={item.icon}
+                sx={{
+                  color: location.pathname === item.path ? 'primary.main' : 'text.primary',
+                  '&:hover': {
+                    color: 'primary.main',
+                  },
+                }}
               >
-                {item.label}
+                {item.text}
               </Button>
             ))}
-          </>
+          </Box>
         )}
 
         <Search>
@@ -164,20 +222,38 @@ const Navbar = () => {
               open={Boolean(mobileMenuAnchor)}
               onClose={handleMobileMenuClose}
             >
-              {navItems.map((item) => (
+              {menuItems.map((item) => (
                 <MenuItem
-                  key={item.label}
+                  key={item.text}
                   component={Link}
                   to={item.path}
                   onClick={handleMobileMenuClose}
                 >
-                  {item.label}
+                  {item.text}
                 </MenuItem>
               ))}
             </Menu>
           </>
         )}
       </Toolbar>
+
+      <Drawer
+        variant="temporary"
+        anchor="left"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: 240,
+            boxSizing: 'border-box',
+          },
+        }}
+      >
+        {drawer}
+      </Drawer>
     </AppBar>
   );
 };
