@@ -20,10 +20,7 @@ const Footer = () => {
 
   const footerLinks = [
     { label: 'About Us', path: '/about' },
-    { label: 'Contact', path: '/contact' },
-    { label: 'Privacy Policy', path: '/privacy-policy' },
-    { label: 'Terms of Service', path: '/terms-of-service' },
-    { label: 'Advertise', path: '/advertise' }
+    { label: 'Contact', path: '/contact' }
   ];
 
   const categories = [

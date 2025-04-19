@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 const path = require('path');
 const fetch = require('node-fetch');
+const axios = require('axios');
 
 dotenv.config();
 
@@ -11,27 +12,19 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS configuration
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://tech-news-vszh.onrender.com',
-  'https://tech-news-3jxo.onrender.com'
-];
-
-// Middleware
-app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://tech-news-vszh.onrender.com'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
   credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range']
+  allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
+  credentials: true
 }));
 
 // Add headers for proper MIME types
@@ -54,7 +47,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../build')));
 
 // Root route handler
 app.get('/', (req, res) => {
@@ -69,13 +62,45 @@ app.get('/health', (req, res) => {
 // News API endpoints
 app.get('/api/news', async (req, res) => {
   try {
-    const { category = 'technology', country = 'us' } = req.query;
-    const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${process.env.NEWS_API_KEY}`);
+    const { category = 'technology', country = 'us', q, sortBy = 'publishedAt', language = 'en' } = req.query;
+    const apiKey = process.env.NEWS_API_KEY;
+    
+    if (!apiKey) {
+      console.error('NEWS_API_KEY is not set');
+      return res.status(500).json({ error: 'News API key is not configured' });
+    }
+
+    let url;
+    if (q) {
+      // If search query is present, use the everything endpoint
+      url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&sortBy=${sortBy}&language=${language}&apiKey=${apiKey}`;
+      console.log('Searching news for query:', q);
+      console.log('Search URL:', url);
+    } else {
+      // Otherwise, use the top-headlines endpoint
+      url = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${apiKey}`;
+      console.log('Fetching headlines for category:', category);
+    }
+    
+    console.log('Making API request to:', url);
+    const response = await fetch(url);
     const data = await response.json();
+    
+    if (!response.ok) {
+      console.error('News API Error:', data);
+      throw new Error(data.message || 'Failed to fetch news');
+    }
+    
+    if (!data.articles || data.articles.length === 0) {
+      console.log('No articles found for query:', q || category);
+      return res.json({ articles: [] });
+    }
+    
+    console.log(`Found ${data.articles.length} articles`);
     res.json(data);
   } catch (error) {
     console.error('Error fetching news:', error);
-    res.status(500).json({ error: 'Failed to fetch news' });
+    res.status(500).json({ error: error.message || 'Failed to fetch news' });
   }
 });
 
@@ -143,7 +168,48 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+// Profile endpoints
+app.get('/api/profile', (req, res) => {
+  // In a real application, you would fetch this from a database
+  const profile = {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    location: 'New York, USA',
+    memberSince: 'January 2024',
+    lastLogin: new Date().toISOString(),
+  };
+  res.json(profile);
+});
+
+app.put('/api/profile', (req, res) => {
+  try {
+    const { name, email, location } = req.body;
+    
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Name and email are required' });
+    }
+
+    // In a real application, you would save this to a database
+    const updatedProfile = {
+      name,
+      email,
+      location: location || 'Not specified',
+      memberSince: 'January 2024',
+      lastLogin: new Date().toISOString(),
+    };
+
+    res.json({
+      message: 'Profile updated successfully',
+      profile: updatedProfile
+    });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`API available at http://localhost:${PORT}/api/news`);
 }); 

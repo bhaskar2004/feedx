@@ -1,72 +1,79 @@
 import axios from 'axios';
 
-const API_KEY = process.env.REACT_APP_NEWS_API_KEY;
-const API_URL = process.env.REACT_APP_API_URL || 'https://tech-news-3jxo.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-if (!API_KEY) {
-  console.error('NewsAPI key is not set! Please add REACT_APP_NEWS_API_KEY to your .env file');
-}
-
-const newsApi = axios.create({
-  baseURL: API_URL,
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_BASE_URL,
   headers: {
-    'X-Api-Key': API_KEY,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
   },
+  withCredentials: true
 });
 
-export const getTopHeadlines = async (category = 'technology', country = 'us') => {
-  try {
-    const response = await fetch(`${API_URL}/api/news?category=${category}&country=${country}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch articles');
+const newsApi = {
+  async getTopHeadlines(params = {}) {
+    try {
+      console.log('Fetching top headlines with params:', params);
+      const response = await api.get('/news', { params });
+      console.log('Top headlines response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching top headlines:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      throw new Error(error.response?.data?.error || 'Failed to fetch top headlines');
     }
-    const data = await response.json();
-    return data.articles;
-  } catch (error) {
-    console.error('Error fetching articles:', error);
-    throw error;
+  },
+
+  async searchNews(query) {
+    try {
+      console.log('Searching news for query:', query);
+      const response = await api.get('/news', { 
+        params: { 
+          q: query,
+          sortBy: 'publishedAt',
+          language: 'en'
+        } 
+      });
+      console.log('Search response:', response.data);
+      if (!response.data.articles) {
+        throw new Error('No articles found');
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Error searching news:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      throw new Error(error.response?.data?.error || 'Failed to search news');
+    }
+  },
+
+  async getNewsByCategory(category) {
+    try {
+      console.log('Fetching news for category:', category);
+      const response = await api.get('/news', { 
+        params: { 
+          category,
+          country: 'us'
+        } 
+      });
+      console.log('Category response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching category news:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      throw new Error(error.response?.data?.error || 'Failed to fetch category news');
+    }
   }
 };
 
-
-export const searchNews = async (query, page = 1) => {
-  try {
-    console.log('Searching news with query:', query);
-    const response = await newsApi.get('/everything', {
-      params: {
-        q: query,
-        language: 'en',
-        sortBy: 'relevancy',
-        pageSize: 20,
-        page,
-        searchIn: 'title,description',
-        domains: 'techcrunch.com,engadget.com,theverge.com,wired.com,arstechnica.com,cnbc.com,reuters.com,bloomberg.com',
-      },
-    });
-    console.log('Search response:', response.data);
-    return response.data.articles;
-  } catch (error) {
-    console.error('Error searching news:', error.response?.data || error.message);
-    throw new Error('Failed to search news: ' + (error.response?.data?.message || error.message));
-  }
-};
-
-export const getNewsByCategory = async (category, page = 1) => {
-  try {
-    console.log('Fetching category news with API key:', API_KEY ? 'Set' : 'Not set');
-    const response = await newsApi.get('/top-headlines', {
-      params: {
-        category,
-        country: 'us',
-        language: 'en',
-        pageSize: 10,
-        page,
-      },
-    });
-    console.log('Category news response:', response.data);
-    return response.data.articles;
-  } catch (error) {
-    console.error('Error fetching category news:', error.response?.data || error.message);
-    throw new Error('Failed to fetch category news: ' + (error.response?.data?.message || error.message));
-  }
-}; 
+export default newsApi; 

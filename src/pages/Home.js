@@ -14,8 +14,9 @@ import {
   useTheme,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { getTopHeadlines } from '../services/newsApi';
+import newsApi from '../services/newsApi';
 import { formatDate } from '../utils/dateUtils';
+import Loading from '../components/Loading';
 
 const Home = () => {
   const [articles, setArticles] = useState([]);
@@ -24,28 +25,21 @@ const Home = () => {
   const theme = useTheme();
 
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchTopHeadlines = async () => {
       try {
         setLoading(true);
-        const data = await getTopHeadlines('technology', 'us');
-        if (data.length === 0) {
-          setError('No articles found. Please try again later.');
-        } else {
-          setArticles(data);
-          setError(null);
-        }
+        const data = await newsApi.getTopHeadlines({ category: 'technology', country: 'us' });
+        setArticles(data.articles || []);
+        setError(null);
       } catch (err) {
-        setError(err.message || 'Failed to fetch articles. Please check your API key and try again later.');
-        console.error('Error in Home component:', err);
+        setError(err.message);
+        setArticles([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchArticles();
-    // Refresh articles every 5 minutes
-    const interval = setInterval(fetchArticles, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    fetchTopHeadlines();
   }, []);
 
   const trendingTopics = [
@@ -57,23 +51,8 @@ const Home = () => {
     'Sports',
   ];
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <Typography color="error" align="center">
-          {error}
-        </Typography>
-      </Container>
-    );
-  }
+  if (loading) return <Loading />;
+  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
