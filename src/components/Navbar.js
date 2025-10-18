@@ -26,9 +26,43 @@ import {
 import { styled, alpha } from '@mui/material/styles';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-  boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+  background: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)', // Safari support
+  borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+    animation: 'liquidFlow 3s ease-in-out infinite',
+  },
 }));
+
+// Add keyframes for liquid flow animation
+const liquidFlowKeyframes = `
+  @keyframes liquidFlow {
+    0%, 100% {
+      left: -100%;
+    }
+    50% {
+      left: 100%;
+    }
+  }
+`;
+
+// Inject keyframes into the document head
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = liquidFlowKeyframes;
+  document.head.appendChild(style);
+}
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -105,14 +139,16 @@ const Navbar = () => {
             sx={{
               flexGrow: isMobile ? 0 : 1,
               textDecoration: 'none',
-              color: 'inherit',
+              color: 'rgba(0, 0, 0, 0.8)',
               mr: 2,
               display: 'flex',
               alignItems: 'center',
               gap: 1,
+              fontWeight: 700,
+              textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
             }}
           >
-            <TrendingUp />
+            <TrendingUp sx={{ color: '#2563eb' }} />
             Tech News
           </Typography>
 
@@ -122,59 +158,65 @@ const Navbar = () => {
                 <Button
                   component={Link}
                   to="/"
-                  color="inherit"
                   sx={{
                     mx: 1,
+                    color: 'rgba(0, 0, 0, 0.7)',
+                    fontWeight: 500,
+                    '&:hover': {
+                      color: '#2563eb',
+                      backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    },
                     '&.active': {
-                      color: 'primary.main',
+                      color: '#2563eb',
                       fontWeight: 'bold',
                     },
                   }}
                 >
                   Home
                 </Button>
-                <Button
-                  component={Link}
-                  to="/search"
-                  color="inherit"
-                  sx={{
-                    mx: 1,
-                    '&.active': {
-                      color: 'primary.main',
-                      fontWeight: 'bold',
-                    },
-                  }}
-                >
-                  Search
-                </Button>
+
                 <Button
                   component={Link}
                   to="/about"
-                  color="inherit"
                   sx={{
                     mx: 1,
+                    color: 'rgba(0, 0, 0, 0.7)',
+                    fontWeight: 500,
+                    '&:hover': {
+                      color: '#2563eb',
+                      backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    },
                     '&.active': {
-                      color: 'primary.main',
+                      color: '#2563eb',
                       fontWeight: 'bold',
                     },
                   }}
                 >
                   About
                 </Button>
-                <Button
-                  component={Link}
-                  to="/contact"
-                  color="inherit"
-                  sx={{
-                    mx: 1,
-                    '&.active': {
-                      color: 'primary.main',
-                      fontWeight: 'bold',
-                    },
-                  }}
-                >
-                  Contact
-                </Button>
+
+                {navItems.slice(1).map((item) => (
+                  <Button
+                    key={item.text}
+                    component={Link}
+                    to={item.path}
+                    sx={{
+                      mx: 1,
+                      color: 'rgba(0, 0, 0, 0.7)',
+                      fontWeight: 500,
+                      '&:hover': {
+                        color: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                      },
+                      '&.active': {
+                        color: '#2563eb',
+                        fontWeight: 'bold',
+                      },
+                    }}
+                  >
+                    {item.text}
+                  </Button>
+                ))}
               </Box>
             </Box>
           )}

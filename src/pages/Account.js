@@ -11,7 +11,7 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
-import { Settings as SettingsIcon, Save as SaveIcon } from '@mui/icons-material';
+import { Settings as SettingsIcon } from '@mui/icons-material';
 import axios from 'axios';
 
 const Account = () => {
@@ -70,12 +70,12 @@ const Account = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.put('http://localhost:5000/api/account', {
+      await axios.put('http://localhost:5000/api/account', {
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword,
         isFirstLogin: formData.isFirstLogin
       });
-      
+
       setSnackbar({
         open: true,
         message: 'Password updated successfully',
@@ -101,16 +101,43 @@ const Account = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #0a0a0a 100%)',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03), transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05), transparent 50%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }
+      }}
+    >
+      <Container
+        maxWidth={false}
+        sx={{
+          maxWidth: '100%',
+          px: { xs: 2, sm: 3, md: 4, lg: 6 },
+          py: 4,
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        <Paper elevation={3} sx={{ p: 4, background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-          <SettingsIcon sx={{ fontSize: 30, mr: 2 }} />
-          <Typography variant="h4" component="h1">
+          <SettingsIcon sx={{ fontSize: 30, mr: 2, color: '#ffffff' }} />
+          <Typography variant="h4" component="h1" sx={{ color: '#ffffff' }}>
             Account Settings
           </Typography>
         </Box>
 
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+        <Typography variant="subtitle1" sx={{ color: 'rgba(255, 255, 255, 0.7)' }} gutterBottom>
           {formData.isFirstLogin ? 'Set your password for the first time' : 'Change your password'}
         </Typography>
 
@@ -167,11 +194,11 @@ const Account = () => {
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
               Notification Preferences
             </Typography>
             <Box sx={{ mt: 2 }}>
-              <Typography variant="body1" sx={{ mb: 2 }}>
+              <Typography variant="body1" sx={{ mb: 2, color: 'rgba(255, 255, 255, 0.8)' }}>
                 Choose how you want to receive notifications:
               </Typography>
               <Button
@@ -195,10 +222,10 @@ const Account = () => {
         <Divider sx={{ my: 4 }} />
 
         <Box>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
             Account Deletion
           </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
+          <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }} paragraph>
             Once you delete your account, there is no going back. Please be certain.
           </Typography>
           <Button
@@ -223,7 +250,8 @@ const Account = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -11,52 +10,150 @@ import {
   Box,
   Chip,
   Button,
+  CircularProgress,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
 
-// Mock data - In a real app, this would come from an API
-const mockAuthor = {
-  id: 1,
-  name: 'John Doe',
-  avatar: 'https://i.pravatar.cc/150?img=1',
-  bio: 'Tech journalist with 10 years of experience covering AI and emerging technologies. Specializes in artificial intelligence, machine learning, and future tech trends.',
-  articles: [
-    {
-      id: 1,
-      title: 'The Future of AI: What to Expect in 2024',
-      excerpt: 'Exploring the latest developments in artificial intelligence and their potential impact on various industries.',
-      image: 'https://source.unsplash.com/random/800x400?ai',
-      category: 'Analysis',
-      date: '2024-01-15',
-    },
-    {
-      id: 2,
-      title: 'Understanding Neural Networks: A Beginner\'s Guide',
-      excerpt: 'A comprehensive introduction to neural networks and their applications in modern technology.',
-      image: 'https://source.unsplash.com/random/800x400?neural',
-      category: 'Analysis',
-      date: '2024-01-10',
-    },
-  ],
-  social: {
-    twitter: 'https://twitter.com/johndoe',
-    linkedin: 'https://linkedin.com/in/johndoe',
-    website: 'https://johndoe.com',
-  },
-};
+import newsApi from '../services/newsApi';
 
 const Author = () => {
-  const { id } = useParams();
-  
-  // In a real app, you would fetch the author data using the id
-  // For now, we'll just use mock data
-  const author = mockAuthor; // In production: await fetchAuthor(id);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchAuthorArticles = async () => {
+      try {
+        setLoading(true);
+        const data = await newsApi.getTopHeadlines();
+        setArticles(data.articles || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAuthorArticles();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #0a0a0a 100%)',
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03), transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05), transparent 50%)',
+            pointerEvents: 'none',
+            zIndex: 0,
+          }
+        }}
+      >
+        <Container
+          maxWidth={false}
+          sx={{
+            maxWidth: '100%',
+            px: { xs: 2, sm: 3, md: 4, lg: 6 },
+            py: 4,
+            position: 'relative',
+            zIndex: 1,
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress />
+        </Container>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #0a0a0a 100%)',
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03), transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05), transparent 50%)',
+            pointerEvents: 'none',
+            zIndex: 0,
+          }
+        }}
+      >
+        <Container
+          maxWidth={false}
+          sx={{
+            maxWidth: '100%',
+            px: { xs: 2, sm: 3, md: 4, lg: 6 },
+            py: 4,
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          <Typography color="error" sx={{ color: '#ffffff' }}>{error}</Typography>
+        </Container>
+      </Box>
+    );
+  }
+
+  // Mock author data since NewsAPI doesn't provide author details
+  const author = {
+    name: 'Tech News Author',
+    avatar: 'https://via.placeholder.com/150',
+    bio: 'Tech journalist covering the latest in technology and innovation.',
+    social: {
+      twitter: '#',
+      linkedin: '#',
+      website: '#',
+    },
+  };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #0a0a0a 100%)',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03), transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05), transparent 50%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }
+      }}
+    >
+      <Container
+        maxWidth={false}
+        sx={{
+          maxWidth: '100%',
+          px: { xs: 2, sm: 3, md: 4, lg: 6 },
+          py: 4,
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
-          <Card>
+          <Card sx={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
             <CardContent>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
                 <Avatar
@@ -64,10 +161,10 @@ const Author = () => {
                   alt={author.name}
                   sx={{ width: 120, height: 120, mb: 2 }}
                 />
-                <Typography variant="h5" component="h1" gutterBottom>
+                <Typography variant="h5" component="h1" gutterBottom sx={{ color: '#ffffff' }}>
                   {author.name}
                 </Typography>
-                <Typography variant="body1" color="text.secondary" align="center">
+                <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.7)' }} align="center">
                   {author.bio}
                 </Typography>
               </Box>
@@ -103,38 +200,39 @@ const Author = () => {
         </Grid>
 
         <Grid item xs={12} md={8}>
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#ffffff' }}>
             Recent Articles
           </Typography>
           <Grid container spacing={3}>
-            {author.articles.map((article) => (
-              <Grid item xs={12} key={article.id}>
-                <Card sx={{ display: 'flex' }}>
+            {articles.slice(0, 5).map((article, index) => (
+              <Grid item xs={12} key={index}>
+                <Card sx={{ display: 'flex', background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                   <CardMedia
                     component="img"
                     sx={{ width: 200, display: { xs: 'none', sm: 'block' } }}
-                    image={article.image}
+                    image={article.urlToImage || 'https://via.placeholder.com/400x200'}
                     alt={article.title}
                   />
                   <CardContent sx={{ flex: 1 }}>
                     <Chip
-                      label={article.category}
-                      color="primary"
+                      label={article.source.name}
+                      sx={{ mb: 1, color: '#ffffff', borderColor: 'rgba(255, 255, 255, 0.3)' }}
                       size="small"
-                      sx={{ mb: 1 }}
                     />
-                    <Typography variant="h6" component="h3" gutterBottom>
+                    <Typography variant="h6" component="h3" gutterBottom sx={{ color: '#ffffff' }}>
                       {article.title}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" paragraph>
-                      {article.excerpt}
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }} paragraph>
+                      {article.description}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {new Date(article.date).toLocaleDateString()}
+                    <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                      {new Date(article.publishedAt).toLocaleDateString()}
                     </Typography>
                     <Button
-                      component={Link}
-                      to={`/article/${article.id}`}
+                      component="a"
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       color="primary"
                       size="small"
                       sx={{ mt: 1 }}
@@ -148,7 +246,8 @@ const Author = () => {
           </Grid>
         </Grid>
       </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 

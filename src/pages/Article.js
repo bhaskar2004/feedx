@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Container,
@@ -11,106 +11,137 @@ import {
   Chip,
   Button,
   Divider,
+  CircularProgress,
 } from '@mui/material';
 import {
   Share as ShareIcon,
-  Favorite as FavoriteIcon,
-  Comment as CommentIcon,
 } from '@mui/icons-material';
 import { formatDate } from '../utils/dateUtils';
-
-// Mock data - In a real app, this would come from an API
-const mockArticle = {
-  id: 1,
-  title: 'The Future of AI: What to Expect in 2024',
-  content: `
-    <p>Artificial Intelligence continues to evolve at a rapid pace, with 2024 promising groundbreaking developments across various sectors. From healthcare to transportation, AI is set to revolutionize how we live and work.</p>
-    
-    <h2>Key Trends to Watch</h2>
-    <p>1. Generative AI: The next generation of AI models will be more sophisticated, capable of creating highly realistic content while maintaining ethical boundaries.</p>
-    <p>2. AI in Healthcare: Advanced diagnostic tools and personalized treatment plans will become more accessible, improving patient outcomes.</p>
-    <p>3. Autonomous Systems: Self-driving vehicles and smart cities will become more prevalent, powered by AI-driven decision-making systems.</p>
-    
-    <h2>Ethical Considerations</h2>
-    <p>As AI becomes more integrated into our daily lives, ethical considerations around privacy, bias, and accountability will become increasingly important.</p>
-  `,
-  author: {
-    name: 'John Doe',
-    avatar: 'https://i.pravatar.cc/150?img=1',
-    bio: 'Tech journalist with 10 years of experience covering AI and emerging technologies.',
-  },
-  date: '2024-01-15',
-  category: 'Analysis',
-  tags: ['AI', 'Machine Learning', 'Technology', 'Future'],
-  likes: 245,
-  comments: 32,
-};
+import newsApi from '../services/newsApi';
 
 const Article = () => {
   const { id } = useParams();
-  
-  // In a real app, you would fetch the article using the id
-  // For now, we'll just use mock data
-  const article = mockArticle; // In production: await fetchArticle(id);
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        setLoading(true);
+        const data = await newsApi.getTopHeadlines();
+        const foundArticle = data.articles ? data.articles[parseInt(id)] : null;
+        if (foundArticle) {
+          setArticle(foundArticle);
+        } else {
+          setError('Article not found');
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchArticle();
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4, display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+
+  if (error || !article) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Typography color="error">{error || 'Article not found'}</Typography>
+      </Container>
+    );
+  }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={8}>
-          <Typography variant="h3" component="h1" gutterBottom>
-            {article.title}
-          </Typography>
-          
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <Avatar
-              src={article.author.avatar}
-              alt={article.author.name}
-              sx={{ mr: 2 }}
-            />
-            <Box>
-              <Typography variant="subtitle1">
-                {article.author.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {formatDate(article.date)} • {article.category}
-              </Typography>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #0a0a0a 100%)',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03), transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05), transparent 50%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }
+      }}
+    >
+      <Container
+        maxWidth={false}
+        sx={{
+          maxWidth: '100%',
+          px: { xs: 2, sm: 3, md: 4, lg: 6 },
+          py: 4,
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={8}>
+            <Typography variant="h3" component="h1" gutterBottom sx={{ color: '#ffffff' }}>
+              {article.title}
+            </Typography>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Avatar
+                src={article.urlToImage || 'https://via.placeholder.com/150'}
+                alt={article.source.name}
+                sx={{ mr: 2 }}
+              />
+              <Box>
+                <Typography variant="subtitle1" sx={{ color: '#ffffff' }}>
+                  {article.source.name}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                  {formatDate(article.publishedAt)} • {article.source.name}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Chip
+                label={article.source.name}
+                sx={{ mr: 1, mb: 1, color: '#ffffff', borderColor: 'rgba(255, 255, 255, 0.3)' }}
+              />
+            </Box>
+
+            <Typography variant="body1" paragraph sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.8)' }}>
+              {article.description}
+            </Typography>
 
           <Box sx={{ mb: 3 }}>
-            {article.tags.map((tag) => (
-              <Chip
-                key={tag}
-                label={tag}
-                sx={{ mr: 1, mb: 1 }}
-              />
-            ))}
+            <Button
+              component="a"
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="contained"
+              color="primary"
+            >
+              Read Full Article
+            </Button>
           </Box>
-
-          <Box
-            sx={{
-              '& h2': { mt: 4, mb: 2 },
-              '& p': { mb: 2 },
-              '& img': { maxWidth: '100%', height: 'auto', mb: 3 },
-            }}
-            dangerouslySetInnerHTML={{ __html: article.content }}
-          />
 
           <Divider sx={{ my: 4 }} />
 
           <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-            <Button
-              variant="outlined"
-              startIcon={<FavoriteIcon />}
-            >
-              {article.likes} Likes
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<CommentIcon />}
-            >
-              {article.comments} Comments
-            </Button>
             <Button
               variant="outlined"
               startIcon={<ShareIcon />}
@@ -121,9 +152,9 @@ const Article = () => {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Card sx={{ mb: 4 }}>
+          <Card sx={{ mb: 4, background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
                 About the Author
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -133,10 +164,10 @@ const Article = () => {
                   sx={{ width: 56, height: 56, mr: 2 }}
                 />
                 <Box>
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle1" sx={{ color: '#ffffff' }}>
                     {article.author.name}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                     {article.author.bio}
                   </Typography>
                 </Box>
@@ -144,9 +175,9 @@ const Article = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card sx={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
                 Related Articles
               </Typography>
               {/* Add related articles here */}
@@ -154,7 +185,8 @@ const Article = () => {
           </Card>
         </Grid>
       </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 
