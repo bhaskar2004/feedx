@@ -217,7 +217,7 @@ const Home = () => {
                     <CardMedia
                       className="featured-media"
                       component="img"
-                      image={article.urlToImage || 'https://via.placeholder.com/1200x600'}
+                      image={article.urlToImage || 'https://picsum.photos/1200/600'}
                       alt={article.title}
                       sx={{
                         width: '100%',
@@ -376,7 +376,7 @@ const Home = () => {
                       className="card-media"
                       component="img"
                       height="200"
-                      image={article.urlToImage || 'https://via.placeholder.com/400x300'}
+                      image={article.urlToImage || 'https://picsum.photos/400/300'}
                       alt={article.title}
                       sx={{
                         objectFit: 'cover',
