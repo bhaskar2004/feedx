@@ -5,14 +5,7 @@ import {
   Grid,
   Typography,
   Link as MuiLink,
-  IconButton,
 } from '@mui/material';
-import {
-  Facebook,
-  Twitter,
-  LinkedIn,
-  Instagram,
-} from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
