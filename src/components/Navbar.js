@@ -175,26 +175,6 @@ const Navbar = () => {
                   Home
                 </Button>
 
-                <Button
-                  component={Link}
-                  to="/about"
-                  sx={{
-                    mx: 1,
-                    color: 'rgba(0, 0, 0, 0.7)',
-                    fontWeight: 500,
-                    '&:hover': {
-                      color: '#2563eb',
-                      backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    },
-                    '&.active': {
-                      color: '#2563eb',
-                      fontWeight: 'bold',
-                    },
-                  }}
-                >
-                  About
-                </Button>
-
                 {navItems.slice(1).map((item) => (
                   <Button
                     key={item.text}

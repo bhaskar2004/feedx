@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Typography, Grid, Card, CardContent, CardMedia, Box } from '@mui/material';
+import { Container, Typography, Grid, Card, CardContent, CardMedia, Box, Button } from '@mui/material';
 import newsApi from '../services/newsApi';
 import Loading from '../components/Loading';
 
@@ -80,10 +80,20 @@ const Category = () => {
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   {article.description}
                 </Typography>
-                <Box mt={2}>
+                <Box mt={2} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
                     Source: {article.source.name}
                   </Typography>
+                  <Button
+                    component="a"
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    color="primary"
+                    size="small"
+                  >
+                    Read More
+                  </Button>
                 </Box>
               </CardContent>
             </Card>
