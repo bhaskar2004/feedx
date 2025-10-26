@@ -70,9 +70,15 @@ A modern web application for browsing and reading tech news articles. Built with
 
 ## Deployment
 
-The application is hosted on Render at: https://technews-updates.onrender.com
+The application is not currently hosted. To deploy:
 
-**Note:** There are some issues with the current deployment that need to be addressed.
+1. Build the frontend for production:
+   ```bash
+   npm run build
+   ```
+2. Deploy the `build` folder to your preferred hosting service (Netlify, Vercel, etc.)
+3. Deploy the backend to a service like Heroku, Railway, or Render
+4. Update environment variables for production
 
 ## Scripts
 
