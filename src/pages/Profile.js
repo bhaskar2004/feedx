@@ -60,7 +60,7 @@ const Profile = () => {
       e.preventDefault();
     }
     try {
-      const response = await axios.put('http://localhost:5000/api/profile', profile);
+      const response = await axios.put('http://https://technews-updates.onrender.com/api/profile', profile);
       setProfile(response.data.profile);
       setIsEditing(false);
       setSnackbar({
