@@ -1,1 +1,5 @@
 - [x] Remove the About button from the desktop navigation in Navbar.js
+- [x] Fix 502 Bad Gateway error on Render
+  - [x] Replace node-fetch with axios in backend/server.js
+  - [x] Update CORS origins to include production frontend domain
+  - [x] Test locally and redeploy to Render
