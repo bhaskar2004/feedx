@@ -12,7 +12,7 @@ import {
   Alert,
 } from '@mui/material';
 import { Settings as SettingsIcon } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../services/newsApi';
 
 const Account = () => {
   const [formData, setFormData] = useState({
@@ -70,7 +70,7 @@ const Account = () => {
     if (!validateForm()) return;
 
     try {
-      await axios.put('http://localhost:5000/api/account', {
+      await api.put('/account', {
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword,
         isFirstLogin: formData.isFirstLogin

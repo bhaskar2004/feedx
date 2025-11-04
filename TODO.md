@@ -3,3 +3,4 @@
   - [x] Replace node-fetch with axios in backend/server.js
   - [x] Update CORS origins to include production frontend domain
   - [x] Test locally and redeploy to Render
+- [x] Add support for production URL (https://technews-updates.onrender.com/) for axios.put in Account.js along with localhost-5000
