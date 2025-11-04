@@ -13,8 +13,6 @@ import {
   Box,
   useScrollTrigger,
   Slide,
-  Avatar,
-  Divider,
 } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -28,7 +26,7 @@ import {
   ChevronRight,
   Close,
 } from '@mui/icons-material';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.1)',
@@ -59,7 +57,7 @@ const liquidFlowKeyframes = `
       left: 100%;
     }
   }
-  
+
   @keyframes slideIn {
     from {
       opacity: 0;
@@ -79,51 +77,66 @@ if (typeof document !== 'undefined') {
 }
 
 const BurgerButton = ({ onClick, isOpen }) => (
-  <button
-    onClick={onClick}
-    className="relative z-50 p-2 rounded-lg hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50"
-    aria-label="Toggle menu"
-    style={{ border: 'none', background: 'transparent', cursor: 'pointer' }}
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
   >
-    <div className="relative w-6 h-6" style={{ width: '24px', height: '24px' }}>
-      <span
-        style={{
-          position: 'absolute',
-          display: 'block',
-          width: '24px',
-          height: '2px',
-          backgroundColor: '#2563eb',
-          transition: 'all 0.3s ease-in-out',
-          transform: isOpen ? 'rotate(45deg)' : 'rotate(0)',
-          top: isOpen ? '11px' : '4px',
-        }}
-      />
-      <span
-        style={{
-          position: 'absolute',
-          display: 'block',
-          width: '24px',
-          height: '2px',
-          backgroundColor: '#2563eb',
-          top: '11px',
-          transition: 'all 0.3s ease-in-out',
-          opacity: isOpen ? 0 : 1,
-        }}
-      />
-      <span
-        style={{
-          position: 'absolute',
-          display: 'block',
-          width: '24px',
-          height: '2px',
-          backgroundColor: '#2563eb',
-          transition: 'all 0.3s ease-in-out',
-          transform: isOpen ? 'rotate(-45deg)' : 'rotate(0)',
-          top: isOpen ? '11px' : '18px',
-        }}
-      />
-    </div>
-  </button>
+    <button
+      onClick={onClick}
+      className="relative z-50 p-2 rounded-lg hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50"
+      aria-label="Toggle menu"
+      style={{
+        border: 'none',
+        background: 'transparent',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <div className="relative w-6 h-6" style={{ width: '24px', height: '24px' }}>
+        <span
+          style={{
+            position: 'absolute',
+            display: 'block',
+            width: '24px',
+            height: '2px',
+            backgroundColor: '#2563eb',
+            transition: 'all 0.3s ease-in-out',
+            transform: isOpen ? 'rotate(45deg)' : 'rotate(0)',
+            top: isOpen ? '11px' : '4px',
+          }}
+        />
+        <span
+          style={{
+            position: 'absolute',
+            display: 'block',
+            width: '24px',
+            height: '2px',
+            backgroundColor: '#2563eb',
+            top: '11px',
+            transition: 'all 0.3s ease-in-out',
+            opacity: isOpen ? 0 : 1,
+          }}
+        />
+        <span
+          style={{
+            position: 'absolute',
+            display: 'block',
+            width: '24px',
+            height: '2px',
+            backgroundColor: '#2563eb',
+            transition: 'all 0.3s ease-in-out',
+            transform: isOpen ? 'rotate(-45deg)' : 'rotate(0)',
+            top: isOpen ? '11px' : '18px',
+          }}
+        />
+      </div>
+    </button>
+  </Box>
 );
 
 const Navbar = () => {
@@ -278,20 +291,15 @@ const Navbar = () => {
     <>
       <Slide appear={false} direction="down" in={!trigger}>
         <StyledAppBar position="sticky">
-          <Toolbar>
-            {isMobile && (
-              <BurgerButton onClick={handleDrawerToggle} isOpen={drawerOpen} />
-            )}
+          <Toolbar sx={{ alignItems: 'center' }}>
             <Typography
               variant="h6"
               component={Link}
               to="/"
               sx={{
-                flexGrow: isMobile ? 1 : 0,
+                flexGrow: 1,
                 textDecoration: 'none',
                 color: 'rgba(0, 0, 0, 0.8)',
-                mr: 2,
-                ml: isMobile ? 2 : 0,
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
@@ -304,44 +312,46 @@ const Navbar = () => {
             </Typography>
 
             {!isMobile && (
-              <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Button
+                  component={Link}
+                  to="/"
+                  sx={{
+                    mx: 1,
+                    color: location.pathname === '/' ? '#2563eb' : 'rgba(0, 0, 0, 0.7)',
+                    fontWeight: location.pathname === '/' ? 700 : 500,
+                    '&:hover': {
+                      color: '#2563eb',
+                      backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    },
+                  }}
+                >
+                  Home
+                </Button>
+
+                {navItems.slice(1).map((item) => (
                   <Button
+                    key={item.text}
                     component={Link}
-                    to="/"
+                    to={item.path}
                     sx={{
                       mx: 1,
-                      color: location.pathname === '/' ? '#2563eb' : 'rgba(0, 0, 0, 0.7)',
-                      fontWeight: location.pathname === '/' ? 700 : 500,
+                      color: location.pathname === item.path ? '#2563eb' : 'rgba(0, 0, 0, 0.7)',
+                      fontWeight: location.pathname === item.path ? 700 : 500,
                       '&:hover': {
                         color: '#2563eb',
                         backgroundColor: 'rgba(37, 99, 235, 0.1)',
                       },
                     }}
                   >
-                    Home
+                    {item.text}
                   </Button>
-
-                  {navItems.slice(1).map((item) => (
-                    <Button
-                      key={item.text}
-                      component={Link}
-                      to={item.path}
-                      sx={{
-                        mx: 1,
-                        color: location.pathname === item.path ? '#2563eb' : 'rgba(0, 0, 0, 0.7)',
-                        fontWeight: location.pathname === item.path ? 700 : 500,
-                        '&:hover': {
-                          color: '#2563eb',
-                          backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                        },
-                      }}
-                    >
-                      {item.text}
-                    </Button>
-                  ))}
-                </Box>
+                ))}
               </Box>
+            )}
+
+            {isMobile && (
+              <BurgerButton onClick={handleDrawerToggle} isOpen={drawerOpen} />
             )}
           </Toolbar>
         </StyledAppBar>
