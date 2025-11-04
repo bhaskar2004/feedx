@@ -3,7 +3,6 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 const path = require('path');
-const fetch = require('node-fetch');
 const axios = require('axios');
 
 dotenv.config();
@@ -12,16 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS configuration
-const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://technews-updates.onrender.com'],
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
-  credentials: true,
-  optionsSuccessStatus: 200
-};
-
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://technews-updates.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
   credentials: true
@@ -83,10 +74,10 @@ app.get('/api/news', async (req, res) => {
     }
     
     console.log('Making API request to:', url);
-    const response = await fetch(url);
-    const data = await response.json();
+    const response = await axios.get(url);
+    const data = response.data;
     
-    if (!response.ok) {
+    if (response.status !== 200) {
       console.error('News API Error:', data);
       throw new Error(data.message || 'Failed to fetch news');
     }
@@ -107,9 +98,8 @@ app.get('/api/news', async (req, res) => {
 app.get('/api/everything', async (req, res) => {
   try {
     const { q, page = 1, pageSize = 20 } = req.query;
-    const response = await fetch(`https://newsapi.org/v2/everything?q=${q}&page=${page}&pageSize=${pageSize}&apiKey=${process.env.NEWS_API_KEY}`);
-    const data = await response.json();
-    res.json(data);
+    const response = await axios.get(`https://newsapi.org/v2/everything?q=${q}&page=${page}&pageSize=${pageSize}&apiKey=${process.env.NEWS_API_KEY}`);
+    res.json(response.data);
   } catch (error) {
     console.error('Error searching news:', error);
     res.status(500).json({ error: 'Failed to search news' });
@@ -119,9 +109,8 @@ app.get('/api/everything', async (req, res) => {
 app.get('/api/top-headlines', async (req, res) => {
   try {
     const { category, country = 'us', page = 1, pageSize = 10 } = req.query;
-    const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&page=${page}&pageSize=${pageSize}&apiKey=${process.env.NEWS_API_KEY}`);
-    const data = await response.json();
-    res.json(data);
+    const response = await axios.get(`https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&page=${page}&pageSize=${pageSize}&apiKey=${process.env.NEWS_API_KEY}`);
+    res.json(response.data);
   } catch (error) {
     console.error('Error fetching top headlines:', error);
     res.status(500).json({ error: 'Failed to fetch top headlines' });
