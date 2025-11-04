@@ -21,7 +21,7 @@ services:
         sync: false
 
   - type: web
-    name: technews-frontend
+    name: technews-updates
     env: static
     region: ohio
     plan: free
