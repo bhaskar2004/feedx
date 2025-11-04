@@ -190,6 +190,42 @@ app.put('/api/profile', (req, res) => {
   }
 });
 
+// Image proxy endpoint - to bypass CORS issues with external images
+app.get('/api/proxy-image', async (req, res) => {
+  try {
+    const { url } = req.query;
+    
+    if (!url) {
+      return res.status(400).json({ error: 'URL parameter is required' });
+    }
+
+    console.log('Proxying image:', url);
+
+    const response = await axios.get(url, {
+      responseType: 'arraybuffer',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Referer': 'https://www.google.com/',
+        'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+      },
+      timeout: 10000 // 10 second timeout
+    });
+
+    const contentType = response.headers['content-type'] || 'image/jpeg';
+    res.set('Content-Type', contentType);
+    res.set('Cache-Control', 'public, max-age=86400'); // Cache for 1 day
+    res.set('Access-Control-Allow-Origin', '*');
+    res.send(response.data);
+  } catch (error) {
+    console.error('Error proxying image:', error.message);
+    // Send a 1x1 transparent pixel as fallback
+    const transparentPixel = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64');
+    res.set('Content-Type', 'image/gif');
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.status(200).send(transparentPixel);
+  }
+});
+
 // Static files - MUST come AFTER API routes
 app.use(express.static(path.join(__dirname, '../build')));
 
