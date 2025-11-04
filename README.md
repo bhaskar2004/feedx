@@ -68,24 +68,6 @@ A modern web application for browsing and reading tech news articles. Built with
 - Click on articles to read full content
 - Access user profile and account pages
 
-## Deployment
-
-The application is not currently hosted. To deploy:
-
-1. Build the frontend for production:
-   ```bash
-   npm run build
-   ```
-2. Deploy the `build` folder to your preferred hosting service (Netlify, Vercel, etc.)
-3. Deploy the backend to a service like Heroku, Railway, or Render
-4. Update environment variables for production
-
-## Scripts
-
-- `npm start`: Start the development server
-- `npm run build`: Build the app for production
-- `npm test`: Run tests
-- `npm run eject`: Eject from Create React App
 
 ## Contributing
 
