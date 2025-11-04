@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://tech-news-vszh.onrender.com'],
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://technews-updates.onrender.com'],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
   credentials: true,
