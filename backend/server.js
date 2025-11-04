@@ -12,7 +12,12 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'https://technews-updates.onrender.com', 'https://technews-backend.onrender.com'],
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:3001', 
+    'http://localhost:3002', 
+    'https://technews-updates.onrender.com'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
   credentials: true
@@ -37,14 +42,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files
-app.use(express.static(path.join(__dirname, '../build')));
-
-// Root route handler
-app.get('/', (req, res) => {
-  res.json({ message: 'Tech News API is running' });
-});
-
+// API Routes MUST come BEFORE static files
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -63,12 +61,9 @@ app.get('/api/news', async (req, res) => {
 
     let url;
     if (q) {
-      // If search query is present, use the everything endpoint
       url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&sortBy=${sortBy}&language=${language}&apiKey=${apiKey}`;
       console.log('Searching news for query:', q);
-      console.log('Search URL:', url);
     } else {
-      // Otherwise, use the top-headlines endpoint
       url = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${apiKey}`;
       console.log('Fetching headlines for category:', category);
     }
@@ -159,7 +154,6 @@ app.post('/api/contact', async (req, res) => {
 
 // Profile endpoints
 app.get('/api/profile', (req, res) => {
-  // In a real application, you would fetch this from a database
   const profile = {
     name: 'John Doe',
     email: 'john.doe@example.com',
@@ -178,7 +172,6 @@ app.put('/api/profile', (req, res) => {
       return res.status(400).json({ error: 'Name and email are required' });
     }
 
-    // In a real application, you would save this to a database
     const updatedProfile = {
       name,
       email,
@@ -197,8 +190,17 @@ app.put('/api/profile', (req, res) => {
   }
 });
 
+// Static files - MUST come AFTER API routes
+app.use(express.static(path.join(__dirname, '../build')));
+
+// Catch-all route - serves React app for any route not handled above
+// This MUST be the last route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+});
+
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-  console.log(`API available at http://localhost:${PORT}/api/news`);
-}); 
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`API available at /api/news`);
+});

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Remove the /api suffix since your routes already include it
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -16,7 +17,7 @@ const newsApi = {
   async getTopHeadlines(params = {}) {
     try {
       console.log('Fetching top headlines with params:', params);
-      const response = await api.get('/news', { params });
+      const response = await api.get('/api/news', { params });
       console.log('Top headlines response:', response.data);
       return response.data;
     } catch (error) {
@@ -32,7 +33,7 @@ const newsApi = {
   async searchNews(query) {
     try {
       console.log('Searching news for query:', query);
-      const response = await api.get('/news', { 
+      const response = await api.get('/api/news', { 
         params: { 
           q: query,
           sortBy: 'publishedAt',
@@ -57,7 +58,7 @@ const newsApi = {
   async getNewsByCategory(category) {
     try {
       console.log('Fetching news for category:', category);
-      const response = await api.get('/news', { 
+      const response = await api.get('/api/news', { 
         params: { 
           category,
           country: 'us'
@@ -76,4 +77,4 @@ const newsApi = {
   }
 };
 
-export default newsApi; 
+export default newsApi;
