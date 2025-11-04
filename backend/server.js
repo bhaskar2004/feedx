@@ -63,17 +63,17 @@ app.get('/api/news', async (req, res) => {
     let url;
     if (q) {
       url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&sortBy=${sortBy}&language=${language}&apiKey=${apiKey}`;
-      console.log('Searching news for query:', q);
+      // console.log('Searching news for query:', q);
     } else if (category === 'indian') {
       // Use everything endpoint for Indian news since top-headlines doesn't support country='in' in free tier
       url = `https://newsapi.org/v2/everything?q=india&sortBy=${sortBy}&language=en&apiKey=${apiKey}`;
-      console.log('Fetching Indian news using everything endpoint');
+      // console.log('Fetching Indian news using everything endpoint');
     } else {
       url = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${apiKey}`;
-      console.log('Fetching headlines for category:', category);
+      // console.log('Fetching headlines for category:', category);
     }
     
-    console.log('Making API request to:', url);
+    // console.log('Making API request to:', url);
     const response = await axios.get(url);
     const data = response.data;
     
@@ -83,12 +83,17 @@ app.get('/api/news', async (req, res) => {
     }
     
     if (!data.articles || data.articles.length === 0) {
-      console.log('No articles found for query:', q || category);
+    // console.log('No articles found for query:', q || category);
       return res.json({ articles: [] });
     }
     
-    console.log(`Found ${data.articles.length} articles`);
-    res.json(data);
+    // Remove duplicate articles based on URL
+    const uniqueArticles = data.articles.filter((article, index, self) =>
+      index === self.findIndex(a => a.url === article.url)
+    );
+
+    // console.log(`Found ${data.articles.length} articles, ${uniqueArticles.length} unique`);
+    res.json({ ...data, articles: uniqueArticles });
   } catch (error) {
     console.error('Error fetching news:', error);
     res.status(500).json({ error: error.message || 'Failed to fetch news' });
@@ -204,7 +209,7 @@ app.get('/api/proxy-image', async (req, res) => {
       return res.status(400).json({ error: 'URL parameter is required' });
     }
 
-    console.log('Proxying image:', url);
+    // console.log('Proxying image:', url);
 
     const response = await axios.get(url, {
       responseType: 'arraybuffer',
@@ -242,6 +247,6 @@ app.get('*', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`API available at /api/news`);
+  // console.log(`Server is running on port ${PORT}`);
+  // console.log(`API available at /api/news`);
 });

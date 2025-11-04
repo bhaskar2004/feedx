@@ -16,9 +16,9 @@ const api = axios.create({
 const newsApi = {
   async getTopHeadlines(params = {}) {
     try {
-      console.log('Fetching top headlines with params:', params);
+      // console.log('Fetching top headlines with params:', params);
       const response = await api.get('/api/news', { params });
-      console.log('Top headlines response:', response.data);
+      // console.log('Top headlines response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching top headlines:', {
@@ -32,15 +32,15 @@ const newsApi = {
 
   async searchNews(query) {
     try {
-      console.log('Searching news for query:', query);
-      const response = await api.get('/api/news', { 
-        params: { 
+      // console.log('Searching news for query:', query);
+      const response = await api.get('/api/news', {
+        params: {
           q: query,
           sortBy: 'publishedAt',
           language: 'en'
-        } 
+        }
       });
-      console.log('Search response:', response.data);
+      // console.log('Search response:', response.data);
       if (!response.data.articles) {
         throw new Error('No articles found');
       }
@@ -57,13 +57,13 @@ const newsApi = {
 
   async getNewsByCategory(category) {
     try {
-      console.log('Fetching news for category:', category);
+      // console.log('Fetching news for category:', category);
       const response = await api.get('/api/news', {
         params: {
           category
         }
       });
-      console.log('Category response:', response.data);
+      // console.log('Category response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching category news:', {

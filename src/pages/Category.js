@@ -130,13 +130,17 @@ const Category = () => {
           const subcategory = indianSubcategories.find(sub => sub.key === selectedSubcategory);
           if (subcategory) {
             // Pass only the query string, not an object
-            console.log('Searching for:', subcategory.query);
+            // console.log('Searching for:', subcategory.query);
             data = await newsApi.searchNews(subcategory.query);
             
             // Filter for relevant articles
             if (data && data.articles) {
               const filteredArticles = filterRelevantArticles(data.articles, subcategory.key);
-              data.articles = filteredArticles.slice(0, 30);
+              // Remove duplicates based on URL
+              const uniqueArticles = filteredArticles.filter((article, index, self) =>
+                index === self.findIndex(a => a.url === article.url)
+              );
+              data.articles = uniqueArticles.slice(0, 30);
             }
           } else {
             data = await newsApi.getNewsByCategory(category);
@@ -145,6 +149,12 @@ const Category = () => {
           data = await newsApi.getNewsByCategory(category);
         }
 
+        // Remove duplicates based on URL
+        if (data?.articles) {
+          data.articles = data.articles.filter((article, index, self) =>
+            article.url && index === self.findIndex(a => a.url === article.url)
+          );
+        }
         setArticles(data?.articles || []);
         setError(null);
       } catch (err) {
