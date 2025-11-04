@@ -13,10 +13,11 @@ const PORT = process.env.PORT || 5000;
 // CORS configuration
 app.use(cors({
   origin: [
-    'http://localhost:3000', 
-    'http://localhost:3001', 
-    'http://localhost:3002', 
-    'https://technews-updates.onrender.com'
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'https://technews-updates.onrender.com',
+    'https://feedx.bhaskar.xyz'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
@@ -63,6 +64,10 @@ app.get('/api/news', async (req, res) => {
     if (q) {
       url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&sortBy=${sortBy}&language=${language}&apiKey=${apiKey}`;
       console.log('Searching news for query:', q);
+    } else if (category === 'indian') {
+      // Use everything endpoint for Indian news since top-headlines doesn't support country='in' in free tier
+      url = `https://newsapi.org/v2/everything?q=india&sortBy=${sortBy}&language=en&apiKey=${apiKey}`;
+      console.log('Fetching Indian news using everything endpoint');
     } else {
       url = `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${apiKey}`;
       console.log('Fetching headlines for category:', category);

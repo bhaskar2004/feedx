@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Remove the /api suffix since your routes already include it
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5002';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -58,11 +58,10 @@ const newsApi = {
   async getNewsByCategory(category) {
     try {
       console.log('Fetching news for category:', category);
-      const response = await api.get('/api/news', { 
-        params: { 
-          category,
-          country: 'us'
-        } 
+      const response = await api.get('/api/news', {
+        params: {
+          category
+        }
       });
       console.log('Category response:', response.data);
       return response.data;

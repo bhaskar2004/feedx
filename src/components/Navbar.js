@@ -23,6 +23,7 @@ import {
   HealthAndSafety,
   Movie,
   SportsBasketball,
+  Public,
   ChevronRight,
   Close,
 } from '@mui/icons-material';
@@ -161,6 +162,7 @@ const Navbar = () => {
     { text: 'Health', path: '/category/health', icon: <HealthAndSafety /> },
     { text: 'Entertainment', path: '/category/entertainment', icon: <Movie /> },
     { text: 'Sports', path: '/category/sports', icon: <SportsBasketball /> },
+    { text: 'Indian', path: '/category/indian', icon: <Public /> },
   ];
 
   const drawer = (
