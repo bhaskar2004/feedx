@@ -27,7 +27,7 @@ const Home = () => {
     const fetchTopHeadlines = async () => {
       try {
         setLoading(true);
-        const data = await newsApi.getTopHeadlines({ category: 'technology', country: 'us' });
+        const data = await newsApi.getTopHeadlines({ country: 'us' });
         setArticles(data.articles || []);
         setError(null);
       } catch (err) {
