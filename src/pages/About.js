@@ -115,204 +115,16 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
-      {/* Animated background gradients */}
-      <div className="fixed inset-0 opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
-      </div>
-
-      <div className="relative z-10">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12">
-          
-          {/* Hero Section with Parallax */}
-          <div ref={heroRef} className="text-center pt-32 pb-48 md:pt-48 md:pb-64">
-            <h1 className="font-mono font-bold text-5xl sm:text-6xl md:text-7xl tracking-tight text-white mb-8 leading-none bg-clip-text bg-gradient-to-b from-white to-gray-400 animate-fade-in">
-              About TechNews
-            </h1>
-            <p className="font-mono font-light text-lg md:text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed tracking-wide">
-              Your trusted source for the latest technology news, innovations, and insights.
-            </p>
-            <div className="mt-20 flex justify-center">
-              <div className="w-px h-24 bg-gradient-to-b from-transparent via-white to-transparent opacity-30 animate-scroll-indicator" />
-            </div>
-          </div>
-
-          {/* Mission Statement with Glass Effect */}
-          <div 
-            ref={el => sectionsRef.current[0] = el}
-            className="mb-48 md:mb-64 text-center opacity-0 transition-all duration-1000"
-            style={{ transform: 'translateY(50px)' }}
-          >
-            <div className="relative inline-block">
-              <h2 className="font-bold text-6xl md:text-8xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-white mb-12 leading-tight">
-                Our Mission
-              </h2>
-              <div className="absolute -inset-4 bg-gradient-to-r from-transparent via-white to-transparent opacity-10 blur-2xl" />
-            </div>
-            <p className="text-2xl md:text-3xl leading-relaxed text-gray-400 max-w-5xl mx-auto font-light">
-              We strive to deliver comprehensive, accurate, and engaging technology news that empowers our readers
-              to stay ahead in the fast-paced digital world. Through careful curation and thoughtful presentation,
-              we make complex tech topics accessible and interesting for everyone.
-            </p>
-          </div>
-
-          {/* Core Values - Grid without boxes */}
-          <div 
-            ref={el => sectionsRef.current[1] = el}
-            className="mb-48 md:mb-64 opacity-0 transition-all duration-1000"
-            style={{ transform: 'translateY(50px)' }}
-          >
-            <h2 className="font-bold text-6xl md:text-8xl tracking-tighter text-white mb-24 text-center leading-tight">
-              What We Value
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-16 gap-y-24 md:gap-y-32">
-              {values.map((value, index) => {
-                const Icon = value.icon;
-                return (
-                  <div
-                    key={index}
-                    className="group relative"
-                  >
-                    <div className="mb-6 text-white transform transition-transform duration-700 group-hover:scale-110 group-hover:rotate-3">
-                      <Icon size={56} strokeWidth={1} />
-                    </div>
-                    <h3 className="font-semibold text-white mb-4 text-3xl tracking-tight">
-                      {value.title}
-                    </h3>
-                    <p className="leading-relaxed text-gray-500 text-lg font-light max-w-xs">
-                      {value.description}
-                    </p>
-                    <div className="absolute -bottom-8 left-0 w-0 h-px bg-gradient-to-r from-white to-transparent transition-all duration-700 group-hover:w-full" />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Technical Expertise - List Style */}
-          <div 
-            ref={el => sectionsRef.current[2] = el}
-            className="mb-48 md:mb-64 opacity-0 transition-all duration-1000"
-            style={{ transform: 'translateY(50px)' }}
-          >
-            <h2 className="font-bold text-6xl md:text-8xl tracking-tighter text-white mb-24 text-center leading-tight">
-              Technical Foundation
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-20 gap-y-20">
-              {expertise.map((expertiseGroup, index) => (
-                <div key={index} className="group">
-                  <h3 className="font-semibold text-white mb-10 text-3xl tracking-tight border-b border-white/10 pb-4 group-hover:border-white/30 transition-colors duration-500">
-                    {expertiseGroup.category}
-                  </h3>
-                  <div className="space-y-6">
-                    {expertiseGroup.items.map((skill, i) => (
-                      <div key={i} className="flex items-baseline gap-4 group/item">
-                        <span className="text-gray-600 text-sm font-mono w-8">0{i + 1}</span>
-                        <p className="font-light text-gray-400 text-xl group-hover/item:text-white transition-colors duration-300">
-                          {skill}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Achievements - Clean Layout */}
-          <div 
-            ref={el => sectionsRef.current[3] = el}
-            className="mb-48 md:mb-64 opacity-0 transition-all duration-1000"
-            style={{ transform: 'translateY(50px)' }}
-          >
-            <h2 className="font-bold text-6xl md:text-8xl tracking-tighter text-white mb-24 text-center leading-tight">
-              Highlights
-            </h2>
-            <div className="space-y-20">
-              {achievements.map((achievement, index) => {
-                const Icon = achievement.icon;
-                return (
-                  <div
-                    key={index}
-                    className="group flex flex-col md:flex-row items-start gap-8 pb-20 border-b border-white/5 last:border-b-0 hover:border-white/20 transition-colors duration-500"
-                  >
-                    <div className="text-white flex-shrink-0 transform transition-transform duration-700 group-hover:scale-125 group-hover:rotate-12">
-                      <Icon size={64} strokeWidth={0.75} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-white mb-4 text-4xl tracking-tight">
-                        {achievement.title}
-                      </h3>
-                      <p className="leading-relaxed text-gray-500 text-xl font-light max-w-2xl">
-                        {achievement.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Contact Information - Minimal */}
-          <div 
-            ref={el => sectionsRef.current[4] = el}
-            className="mb-48 md:mb-48 opacity-0 transition-all duration-1000"
-            style={{ transform: 'translateY(50px)' }}
-          >
-            <h2 className="font-bold text-6xl md:text-8xl tracking-tighter text-white mb-12 text-center leading-tight">
-              Contact
-            </h2>
-            <p className="text-gray-500 mb-24 text-center text-xl font-light">
-              Have questions? We're here to help.
-            </p>
-
-            <div className="max-w-3xl mx-auto space-y-12">
-              {contactInfo.map((info, index) => {
-                const Icon = info.icon;
-                return (
-                  <div
-                    key={index}
-                    className="group flex items-center gap-8 py-8 border-b border-white/5 hover:border-white/20 transition-all duration-500"
-                  >
-                    <div className="text-gray-600 group-hover:text-white transition-colors duration-500">
-                      <Icon size={28} strokeWidth={1.5} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-gray-600 text-sm font-mono mb-1 tracking-wider uppercase">
-                        {info.title}
-                      </h3>
-                      <p className="text-white text-xl font-light group-hover:translate-x-2 transition-transform duration-500">
-                        {info.content}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Closing Statement */}
-          <div 
-            ref={el => sectionsRef.current[5] = el}
-            className="pb-32 text-center opacity-0 transition-all duration-1000"
-            style={{ transform: 'translateY(50px)' }}
-          >
-            <h3 className="font-bold mb-8 text-white text-5xl md:text-7xl tracking-tighter leading-tight">
-              Join Our Community
-            </h3>
-            <p className="max-w-3xl mx-auto leading-relaxed text-gray-500 text-2xl md:text-3xl font-light">
-              Stay connected with the latest in technology. Whether you're a tech enthusiast, developer,
-              or just curious about the digital world, TechNews is here to keep you informed and inspired.
-            </p>
-            <div className="mt-16 inline-block">
-              <div className="w-32 h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-30" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#000',
+      position: 'relative',
+      overflow: 'hidden',
+      WebkitFontSmoothing: 'antialiased',
+      MozOsxFontSmoothing: 'grayscale'
+    }}>
+      {/* Global Styles */}
+      <style>{`
         @keyframes fade-in {
           from {
             opacity: 0;
@@ -335,14 +147,570 @@ const About = () => {
           }
         }
 
-        .animate-fade-in {
-          animation: fade-in 1.2s ease-out;
+        @keyframes pulse-glow {
+          0%, 100% {
+            opacity: 0.3;
+          }
+          50% {
+            opacity: 0.5;
+          }
         }
 
-        .animate-scroll-indicator {
-          animation: scroll-indicator 2s ease-in-out infinite;
+        @keyframes gradient-shift {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        ::selection {
+          background-color: rgba(255, 255, 255, 0.2);
+          color: #ffffff;
+        }
+
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+
+        *:focus-visible {
+          outline: 2px solid rgba(255, 255, 255, 0.5);
+          outline-offset: 4px;
         }
       `}</style>
+
+      {/* Animated background gradients */}
+      <div style={{ position: 'fixed', inset: 0, opacity: 0.3 }}>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: '25%',
+          width: '384px',
+          height: '384px',
+          backgroundColor: '#fff',
+          borderRadius: '9999px',
+          mixBlendMode: 'overlay',
+          filter: 'blur(96px)',
+          animation: 'pulse-glow 8s ease-in-out infinite'
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: 0,
+          right: '25%',
+          width: '384px',
+          height: '384px',
+          backgroundColor: '#fff',
+          borderRadius: '9999px',
+          mixBlendMode: 'overlay',
+          filter: 'blur(96px)',
+          animation: 'pulse-glow 10s ease-in-out infinite',
+          animationDelay: '2s'
+        }} />
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 10 }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          
+          {/* Hero Section with Parallax */}
+          <div ref={heroRef} style={{
+            textAlign: 'center',
+            paddingTop: '128px',
+            paddingBottom: '192px',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}>
+            <h1 style={{
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              fontSize: 'clamp(3rem, 8vw, 4.5rem)',
+              letterSpacing: '-0.05em',
+              color: '#fff',
+              marginBottom: '32px',
+              lineHeight: 1,
+              background: 'linear-gradient(to bottom, #ffffff, #9ca3af)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% auto',
+              animation: 'fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1), gradient-shift 8s ease infinite'
+            }}>
+              About TechNews
+            </h1>
+            <p style={{
+              fontFamily: 'monospace',
+              fontWeight: 300,
+              fontSize: 'clamp(1.125rem, 2vw, 1.25rem)',
+              color: '#9ca3af',
+              maxWidth: '896px',
+              margin: '0 auto',
+              lineHeight: 1.7,
+              letterSpacing: '0.02em'
+            }}>
+              Your trusted source for the latest technology news, innovations, and insights.
+            </p>
+            <div style={{ marginTop: '80px', display: 'flex', justifyContent: 'center' }}>
+              <div style={{
+                width: '1px',
+                height: '96px',
+                background: 'linear-gradient(to bottom, transparent, #fff, transparent)',
+                opacity: 0.3,
+                animation: 'scroll-indicator 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+              }} />
+            </div>
+          </div>
+
+          {/* Mission Statement */}
+          <div 
+            ref={el => sectionsRef.current[0] = el}
+            style={{
+              marginBottom: '256px',
+              textAlign: 'center',
+              opacity: 0,
+              transform: 'translateY(50px)',
+              transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <h2 style={{
+                fontWeight: 700,
+                fontSize: 'clamp(3.75rem, 10vw, 6rem)',
+                letterSpacing: '-0.05em',
+                background: 'linear-gradient(to right, #fff, #e5e7eb, #fff)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                marginBottom: '48px',
+                lineHeight: 1.1,
+                backgroundSize: '200% auto',
+                animation: 'gradient-shift 8s ease infinite'
+              }}>
+                Our Mission
+              </h2>
+              <div style={{
+                position: 'absolute',
+                inset: '-16px',
+                background: 'linear-gradient(to right, transparent, #fff, transparent)',
+                opacity: 0.1,
+                filter: 'blur(48px)',
+                pointerEvents: 'none'
+              }} />
+            </div>
+            <p style={{
+              fontSize: 'clamp(1.5rem, 3vw, 1.875rem)',
+              lineHeight: 1.6,
+              color: '#9ca3af',
+              maxWidth: '1120px',
+              margin: '0 auto',
+              fontWeight: 300
+            }}>
+              We strive to deliver comprehensive, accurate, and engaging technology news that empowers our readers
+              to stay ahead in the fast-paced digital world. Through careful curation and thoughtful presentation,
+              we make complex tech topics accessible and interesting for everyone.
+            </p>
+          </div>
+
+          {/* Core Values */}
+          <div 
+            ref={el => sectionsRef.current[1] = el}
+            style={{
+              marginBottom: '256px',
+              opacity: 0,
+              transform: 'translateY(50px)',
+              transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <h2 style={{
+              fontWeight: 700,
+              fontSize: 'clamp(3.75rem, 10vw, 6rem)',
+              letterSpacing: '-0.05em',
+              color: '#fff',
+              marginBottom: '96px',
+              textAlign: 'center',
+              lineHeight: 1.1
+            }}>
+              What We Value
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '96px 64px'
+            }}>
+              {values.map((value, index) => {
+                const Icon = value.icon;
+                return (
+                  <div key={index} style={{ position: 'relative' }}>
+                    <div style={{
+                      marginBottom: '24px',
+                      color: '#fff',
+                      transform: 'scale(1)',
+                      transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+                      cursor: 'default'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1) rotate(3deg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+                    }}>
+                      <Icon size={56} strokeWidth={1} />
+                    </div>
+                    <h3 style={{
+                      fontWeight: 600,
+                      color: '#fff',
+                      marginBottom: '16px',
+                      fontSize: '1.875rem',
+                      letterSpacing: '-0.025em'
+                    }}>
+                      {value.title}
+                    </h3>
+                    <p style={{
+                      lineHeight: 1.6,
+                      color: '#6b7280',
+                      fontSize: '1.125rem',
+                      fontWeight: 300,
+                      maxWidth: '320px'
+                    }}>
+                      {value.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Technical Expertise */}
+          <div 
+            ref={el => sectionsRef.current[2] = el}
+            style={{
+              marginBottom: '256px',
+              opacity: 0,
+              transform: 'translateY(50px)',
+              transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <h2 style={{
+              fontWeight: 700,
+              fontSize: 'clamp(3.75rem, 10vw, 6rem)',
+              letterSpacing: '-0.05em',
+              color: '#fff',
+              marginBottom: '96px',
+              textAlign: 'center',
+              lineHeight: 1.1
+            }}>
+              Technical Foundation
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '80px'
+            }}>
+              {expertise.map((expertiseGroup, index) => (
+                <div key={index}>
+                  <h3 style={{
+                    fontWeight: 600,
+                    color: '#fff',
+                    marginBottom: '40px',
+                    fontSize: '1.875rem',
+                    letterSpacing: '-0.025em',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    paddingBottom: '16px',
+                    transition: 'border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,0.1)';
+                  }}>
+                    {expertiseGroup.category}
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                    {expertiseGroup.items.map((skill, i) => (
+                      <div key={i} style={{
+                        display: 'flex',
+                        alignItems: 'baseline',
+                        gap: '16px'
+                      }}>
+                        <span style={{
+                          color: '#4b5563',
+                          fontSize: '0.875rem',
+                          fontFamily: 'monospace',
+                          width: '32px',
+                          flexShrink: 0
+                        }}>
+                          0{i + 1}
+                        </span>
+                        <p style={{
+                          fontWeight: 300,
+                          color: '#9ca3af',
+                          fontSize: '1.25rem',
+                          transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                          cursor: 'default'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = '#fff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = '#9ca3af';
+                        }}>
+                          {skill}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Achievements */}
+          <div 
+            ref={el => sectionsRef.current[3] = el}
+            style={{
+              marginBottom: '256px',
+              opacity: 0,
+              transform: 'translateY(50px)',
+              transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <h2 style={{
+              fontWeight: 700,
+              fontSize: 'clamp(3.75rem, 10vw, 6rem)',
+              letterSpacing: '-0.05em',
+              color: '#fff',
+              marginBottom: '96px',
+              textAlign: 'center',
+              lineHeight: 1.1
+            }}>
+              Highlights
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
+              {achievements.map((achievement, index) => {
+                const Icon = achievement.icon;
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'flex-start',
+                      gap: '32px',
+                      paddingBottom: '80px',
+                      borderBottom: index < achievements.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                      transition: 'border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                      flexWrap: 'wrap'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (index < achievements.length - 1) {
+                        e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,0.2)';
+                      }
+                      const icon = e.currentTarget.querySelector('.achievement-icon');
+                      if (icon) {
+                        icon.style.transform = 'scale(1.25) rotate(12deg)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (index < achievements.length - 1) {
+                        e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,0.05)';
+                      }
+                      const icon = e.currentTarget.querySelector('.achievement-icon');
+                      if (icon) {
+                        icon.style.transform = 'scale(1) rotate(0deg)';
+                      }
+                    }}
+                  >
+                    <div className="achievement-icon" style={{
+                      color: '#fff',
+                      flexShrink: 0,
+                      transform: 'scale(1)',
+                      transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}>
+                      <Icon size={64} strokeWidth={0.75} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: '250px' }}>
+                      <h3 style={{
+                        fontWeight: 600,
+                        color: '#fff',
+                        marginBottom: '16px',
+                        fontSize: '2.25rem',
+                        letterSpacing: '-0.025em'
+                      }}>
+                        {achievement.title}
+                      </h3>
+                      <p style={{
+                        lineHeight: 1.6,
+                        color: '#6b7280',
+                        fontSize: '1.25rem',
+                        fontWeight: 300,
+                        maxWidth: '640px'
+                      }}>
+                        {achievement.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div 
+            ref={el => sectionsRef.current[4] = el}
+            style={{
+              marginBottom: '192px',
+              opacity: 0,
+              transform: 'translateY(50px)',
+              transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <h2 style={{
+              fontWeight: 700,
+              fontSize: 'clamp(3.75rem, 10vw, 6rem)',
+              letterSpacing: '-0.05em',
+              color: '#fff',
+              marginBottom: '48px',
+              textAlign: 'center',
+              lineHeight: 1.1
+            }}>
+              Contact
+            </h2>
+            <p style={{
+              color: '#6b7280',
+              marginBottom: '96px',
+              textAlign: 'center',
+              fontSize: '1.25rem',
+              fontWeight: 300
+            }}>
+              Have questions? We're here to help.
+            </p>
+
+            <div style={{
+              maxWidth: '768px',
+              margin: '0 auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '48px'
+            }}>
+              {contactInfo.map((info, index) => {
+                const Icon = info.icon;
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '32px',
+                      padding: '32px 0',
+                      borderBottom: '1px solid rgba(255,255,255,0.05)',
+                      transition: 'border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,0.2)';
+                      const icon = e.currentTarget.querySelector('.contact-icon');
+                      const content = e.currentTarget.querySelector('.contact-content');
+                      if (icon) icon.style.color = '#fff';
+                      if (content) content.style.transform = 'translateX(8px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderBottomColor = 'rgba(255,255,255,0.05)';
+                      const icon = e.currentTarget.querySelector('.contact-icon');
+                      const content = e.currentTarget.querySelector('.contact-content');
+                      if (icon) icon.style.color = '#4b5563';
+                      if (content) content.style.transform = 'translateX(0)';
+                    }}
+                  >
+                    <div className="contact-icon" style={{
+                      color: '#4b5563',
+                      transition: 'color 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}>
+                      <Icon size={28} strokeWidth={1.5} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <h3 style={{
+                        color: '#4b5563',
+                        fontSize: '0.875rem',
+                        fontFamily: 'monospace',
+                        marginBottom: '4px',
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase'
+                      }}>
+                        {info.title}
+                      </h3>
+                      <p className="contact-content" style={{
+                        color: '#fff',
+                        fontSize: '1.25rem',
+                        fontWeight: 300,
+                        transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}>
+                        {info.content}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Closing Statement */}
+          <div 
+            ref={el => sectionsRef.current[5] = el}
+            style={{
+              paddingBottom: '128px',
+              textAlign: 'center',
+              opacity: 0,
+              transform: 'translateY(50px)',
+              transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <h3 style={{
+              fontWeight: 700,
+              marginBottom: '32px',
+              color: '#fff',
+              fontSize: 'clamp(3rem, 8vw, 4.5rem)',
+              letterSpacing: '-0.05em',
+              lineHeight: 1.1
+            }}>
+              Join Our Community
+            </h3>
+            <p style={{
+              maxWidth: '768px',
+              margin: '0 auto',
+              lineHeight: 1.6,
+              color: '#6b7280',
+              fontSize: 'clamp(1.5rem, 3vw, 1.875rem)',
+              fontWeight: 300
+            }}>
+              Stay connected with the latest in technology. Whether you're a tech enthusiast, developer,
+              or just curious about the digital world, TechNews is here to keep you informed and inspired.
+            </p>
+            <div style={{ marginTop: '64px', display: 'inline-block' }}>
+              <div style={{
+                width: '128px',
+                height: '1px',
+                background: 'linear-gradient(to right, transparent, #fff, transparent)',
+                opacity: 0.3
+              }} />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
