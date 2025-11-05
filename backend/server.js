@@ -5,8 +5,6 @@ const dotenv = require('dotenv');
 const path = require('path');
 const axios = require('axios');
 const compression = require('compression');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const NodeCache = require('node-cache');
 
 dotenv.config();
@@ -17,36 +15,7 @@ const PORT = process.env.PORT || 5000;
 // Initialize cache (5 minute TTL)
 const cache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
 
-// Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      connectSrc: ["'self'", "https://technews-updates.onrender.com"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https:", "http:"],
-      scriptSrc: ["'self'"],
-    },
-  },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  }
-}));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use(limiter);
 
 // Compression middleware
 app.use(compression());

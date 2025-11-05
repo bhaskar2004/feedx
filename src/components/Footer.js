@@ -22,6 +22,7 @@ const Footer = () => {
     { label: 'Health', path: '/category/health' },
     { label: 'Entertainment', path: '/category/entertainment' },
     { label: 'Sports', path: '/category/sports' },
+    { label: 'Indian', path: '/category/indian' },
   ];
 
   return (
