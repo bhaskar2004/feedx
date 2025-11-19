@@ -12,7 +12,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
-    { label: 'About Us', path: '/about' }
+    { label: 'About us', href: 'https://bhaskar.xyz' }
   ];
 
   const categories = [
@@ -54,8 +54,9 @@ const Footer = () => {
               {footerLinks.map((link) => (
                 <li key={link.label}>
                   <MuiLink
-                    component={Link}
-                    to={link.path}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     color="text.secondary"
                     sx={{ display: 'block', mb: 1 }}
                   >
